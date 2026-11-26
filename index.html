@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>WEB E-MODUL LOGIMATH</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#CFE1F7;--card:#EAF2FC;--soft:#F5F9FE;--pane:#DBE8F8;--ink:#14284B;--mut:#46557A;--line:#B4C9E4;--blue:#2457C5;--sun:#F5A524;--a:#D9531E;--n:#0E8F8B;--c:#6B4FD8;--sh:0 2px 10px rgba(20,40,75,.07);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Nunito,system-ui,sans-serif;overflow-x:hidden;min-height:100vh;overflow-wrap:break-word}
+h1,h2,h3{font-family:"Baloo 2",system-ui,sans-serif;line-height:1.2;margin:0 0 .4em}
+h2{font-size:1.9rem}p{margin:.3em 0 .8em;max-width:64ch}.mut{color:var(--mut)}
+sup{font-size:.65em;line-height:0}
+.orb{display:none}
+.view{display:none;position:relative;z-index:1;min-height:100vh}
+.view.on{display:block;animation:enter .5s ease}
+@keyframes enter{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.wrap{max-width:920px;margin:auto;padding:16px 18px 96px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0 18px}
+.top b{font-family:"Baloo 2",sans-serif;font-size:1.2rem;color:var(--blue);letter-spacing:.04em}
+/* cover */
+#cover{display:none;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:40px 20px;overflow:hidden;background:#BFD8F7}
+#cover.on{display:flex}
+#cover:before{content:"";position:absolute;width:520px;height:520px;border-radius:50%;background:#A6C6EE;right:-170px;top:-170px}
+#cover:after{content:"";position:absolute;width:380px;height:380px;border-radius:50%;background:#FFD98A;left:-130px;bottom:-140px}
+#cover>*:not(.sym){position:relative;z-index:2}
+#cover p{color:var(--ink)}
+.sym{position:absolute;z-index:1;pointer-events:none;font:800 3.2rem "Baloo 2",sans-serif;color:#7FA3DC;opacity:.75;animation:fl 8s ease-in-out infinite;user-select:none}
+@keyframes fl{50%{transform:translateY(-30px) rotate(8deg)}}
+.logo{font:800 clamp(2.5rem,13.5vw,6.5rem)/1.05 "Baloo 2",sans-serif;white-space:nowrap;color:var(--ink);margin:12px 0 6px;letter-spacing:.03em}
+.logo span{display:inline-block;opacity:0;animation:pop .8s cubic-bezier(.3,1.5,.5,1) forwards}
+.logo span:nth-child(n+5){color:var(--blue)}
+.logo:after{content:"";display:block;height:6px;width:0;background:var(--sun);border-radius:6px;margin:8px auto 0;animation:ul 1s 1.3s forwards}
+@keyframes ul{to{width:55%}}
+@keyframes pop{from{opacity:0;transform:translateY(40px) scale(.6)}to{opacity:1;transform:none}}
+.late{opacity:0;animation:pop 1s forwards}
+.badge{display:inline-block;background:var(--soft);color:var(--blue);border:1px solid #C9D9F3;border-radius:999px;padding:4px 16px;font-weight:700;font-size:.9rem}
+.author{margin-top:22px;font-size:1rem;color:var(--mut)}.author b{font-family:"Baloo 2",sans-serif;font-size:1.5rem;color:var(--ink);display:block}
+button{font:inherit;border:0;border-radius:999px;padding:9px 20px;font-weight:700;cursor:pointer;background:var(--blue);color:#fff;box-shadow:0 2px 6px rgba(36,87,197,.25);transition:transform .15s,background .15s,box-shadow .15s;touch-action:manipulation}
+button:hover{transform:translateY(-1px);background:#1C47A6}
+button:active{transform:translateY(1px)}
+button.ghost{background:var(--soft);color:var(--ink);border:1px solid var(--line);box-shadow:none}
+button.ghost:hover{background:var(--pane)}
+button:disabled{opacity:.4;cursor:not-allowed;transform:none}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #9DB6E6;outline-offset:2px}
+.start{font-size:1.15rem;padding:13px 38px;margin-top:26px;opacity:0;animation:pop 1s 2.4s forwards,pulse 2.4s 4s infinite}
+@keyframes pulse{50%{transform:scale(1.06)}}
+/* dash */
+.hello{text-align:center;padding:16px 0 4px}.hello h2{font-size:2.2rem}
+.prog{height:10px;background:var(--line);border-radius:9px;max-width:420px;margin:10px auto 22px;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--n);transition:width .7s}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(280px,100%),1fr));gap:14px}
+.mc{position:relative;display:grid;grid-template-columns:64px 1fr;column-gap:14px;align-items:center;text-align:left;background:var(--k);color:var(--ink);border:1px solid var(--line);border-radius:18px;padding:14px 16px;box-shadow:var(--sh);opacity:0;animation:mcin .6s calc(var(--i)*.08s) forwards;transition:transform .2s,box-shadow .2s}
+@keyframes mcin{from{opacity:0;transform:translateY(30px)}to{opacity:1}}
+.mc:hover{background:var(--k);transform:translateY(-4px);box-shadow:0 12px 26px rgba(20,40,75,.14)}
+.mc .ic{grid-row:1/3;display:grid;place-items:center;width:64px;height:64px;border-radius:16px;background:rgba(255,255,255,.65);font-size:2rem;animation:bob 3s ease-in-out infinite;animation-delay:calc(var(--i)*.3s)}
+@keyframes bob{50%{transform:translateY(-5px) rotate(6deg)}}
+.mc h3{margin:0;font-size:1.2rem;align-self:end}.mc p{margin:0;color:var(--mut);font-size:.9rem;line-height:1.4;align-self:start}
+.mc .ck{position:absolute;top:10px;right:12px;font-size:.75rem;background:var(--n);color:#fff;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;opacity:0;transform:scale(0);transition:.4s}
+.mc.seen .ck{opacity:1;transform:scale(1)}
+/* konten */
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin:12px 0;box-shadow:var(--sh)}
+.a{color:var(--a)}.n{color:var(--n)}.c{color:var(--c)}b.t{font-family:"Baloo 2",sans-serif;font-size:1.25em}
+.tg{padding-left:1.2em}.tg li{margin:8px 0;opacity:0;animation:slide .6s calc(var(--i)*.15s) forwards}
+@keyframes slide{from{opacity:0;transform:translateX(-24px)}to{opacity:1;transform:none}}
+.eq{display:flex;gap:12px;justify-content:center;align-items:center;flex-wrap:wrap;font-size:clamp(1.5rem,6vw,2.4rem);text-align:center}
+.eq .f{background:var(--pane);border-radius:14px;padding:6px 16px;min-width:150px}
+.flip .f{animation:flp .7s}@keyframes flp{from{transform:scale(.7) rotateX(80deg);opacity:0}to{transform:none;opacity:1}}
+.swap{font-size:1.8rem;display:inline-block;color:var(--blue);animation:spin 3s ease-in-out infinite}
+@keyframes spin{0%,30%{transform:rotate(0)}60%,100%{transform:rotate(360deg)}}
+.ctl{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:center;margin-top:10px}
+select,input[type=text],input:not([type]){background:var(--soft);color:var(--ink);border:1px solid #B9C8DE;border-radius:10px;padding:7px 10px;font:inherit}
+details{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin:10px 0}
+summary{cursor:pointer;font-weight:700}details[open] .ex{animation:flp .5s}
+.ex{margin-top:8px;padding:10px 12px;border-left:4px solid var(--sun);background:var(--pane);border-radius:6px}
+/* PBL */
+.steps{display:flex;justify-content:space-between;position:relative;margin:10px 0 18px}
+.steps:before{content:"";position:absolute;left:8%;right:8%;top:24px;height:3px;background:var(--line)}
+.sn{position:relative;z-index:1;flex:1;background:none;box-shadow:none;color:var(--mut);padding:0;font-size:.78rem;line-height:1.3;text-align:center}
+.sn:hover,.sn:active{background:none;transform:none}
+.sn i{display:grid;place-items:center;width:50px;height:50px;margin:0 auto 4px;border-radius:50%;background:var(--soft);border:2px solid var(--line);font:800 1.2rem "Baloo 2",sans-serif;font-style:normal;transition:.3s;color:var(--ink)}
+.sn.on{color:var(--ink);font-weight:700}.sn.on i{background:var(--blue);color:#fff;border-color:var(--blue);transform:scale(1.1);box-shadow:0 0 0 6px rgba(36,87,197,.15)}
+.sn.ok i{background:var(--n);color:#fff;border-color:var(--n)}
+.card.story{border-left:6px solid var(--a);font-size:1.05rem}
+.card .story{background:var(--pane);border-radius:12px;padding:12px 14px;margin:8px 0;border-left:5px solid var(--a)}
+.big{font:800 2.2rem "Baloo 2",sans-serif;color:var(--n)}
+.rail{height:24px;background:var(--pane);border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.rail i{display:block;height:100%;width:0;background:var(--sun);transition:width .4s}
+table{border-collapse:collapse;width:100%}td,th{border-bottom:1px solid var(--line);padding:8px 6px;text-align:center}
+tr.rv{animation:slide .5s forwards}
+.st{padding:8px 12px;margin:6px 0;border-radius:10px;background:var(--pane);animation:flp .5s}
+input[type=range]{width:100%;accent-color:var(--blue)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.tab{background:var(--soft);color:var(--ink);border:1px solid var(--line);box-shadow:none}.tab:hover{background:var(--pane)}
+.tab[aria-selected=true],.tab[aria-selected=true]:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+.q{display:flex;gap:10px 12px;flex-wrap:wrap;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}
+.q .tx{flex:1 1 280px}.q input{width:96px}.fb{font-weight:700;min-width:120px}.ok{color:var(--n)}.no{color:var(--a)}
+.bar{height:12px;background:var(--line);border-radius:9px;overflow:hidden;margin:8px 0}.bar i{display:block;height:100%;width:0;background:var(--n);transition:width .6s}
+.rf{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line)}
+.rf .on{background:var(--n);color:#fff;border-color:var(--n)}
+.op{display:flex;gap:10px;align-items:flex-start;padding:10px 14px;margin:8px 0;border:1px solid var(--line);border-radius:12px;cursor:pointer;background:var(--soft);transition:.15s}
+.op:hover{background:var(--pane)}.op.sel{background:#E3ECFD;border-color:var(--blue)}.op input{margin:4px 0 0;width:18px;height:18px;flex:none;accent-color:var(--blue)}
+#mus{position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:20;display:flex;align-items:center;gap:8px;background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:4px 12px 4px 4px;box-shadow:0 4px 16px rgba(20,40,75,.15)}
+#mus button{padding:6px 10px;font-size:1.05rem;background:var(--pane);color:var(--ink);box-shadow:none}#mus input{width:76px;accent-color:var(--blue)}
+#mt{position:fixed;right:12px;bottom:calc(66px + env(safe-area-inset-bottom,0px));z-index:21;background:var(--ink);color:#fff;padding:9px 14px;border-radius:12px;font-size:.85rem;line-height:1.4;max-width:min(280px,calc(100vw - 24px));box-shadow:0 6px 18px rgba(20,40,75,.3)}
+.hint{flex-basis:100%;background:var(--pane);border-left:4px solid var(--sun);padding:8px 12px;border-radius:8px;font-size:.95rem}
+.card.right{border-color:var(--n);box-shadow:0 0 0 2px var(--n)}.card.wrong{border-color:var(--a);box-shadow:0 0 0 2px var(--a)}.card.miss{border-color:var(--sun);box-shadow:0 0 0 3px var(--sun)}
+.op.good{background:#BFEAD0;border-color:var(--n)}.op.bad{background:#FFD0C2;border-color:var(--a)}
+.rv2{margin-top:10px;padding:9px 12px;border-radius:10px;font-size:.95rem;line-height:1.5}.okb{background:#CDEFD8}.nob{background:#FFE0D6}
+.q{border-radius:10px;padding-left:8px;padding-right:8px}.q.qok{background:rgba(14,143,139,.14)}.q.qno{background:rgba(217,83,30,.13)}
+.conf{position:fixed;top:-20px;z-index:30;animation:fall 2.2s linear forwards;pointer-events:none;font-size:1.6rem}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+#cover.again .late,#cover.again .logo span{animation:none;opacity:1;transform:none}#cover.again .logo:after{animation:none;width:55%}#cover.again .start{animation:pulse 2.4s infinite;opacity:1}
+#dash.shown .mc{animation:none;opacity:1}
+@media(max-width:640px){body{font-size:16px}h2{font-size:1.55rem}.hello h2{font-size:1.7rem}.wrap{padding:12px 14px 96px}
+ .lb{display:none}.sn i{width:40px;height:40px;font-size:1rem}.steps:before{top:20px}
+ .q .tx{flex:1 1 100%}.q input{width:90px}.eq .f{min-width:0}.sym{font-size:2.2rem}
+ .mc{grid-template-columns:54px 1fr}.mc .ic{width:54px;height:54px;font-size:1.7rem}#mus input{width:56px}
+ .card{padding:14px}.ctl button{flex:0 1 auto}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-delay:0s!important;animation-iteration-count:1!important;transition:none!important}}
+/* ===== v2: tampilan dan animasi ===== */
+body{background:linear-gradient(125deg,#CFE1F7,#DDEBFB,#D5F0EE,#FFF1D6,#CFE1F7);background-size:320% 320%;animation:bgm 22s ease infinite}
+@keyframes bgm{50%{background-position:100% 50%}}
+.orb{display:block;position:fixed;z-index:0;border-radius:50%;pointer-events:none;animation:drift 16s ease-in-out infinite alternate}
+.o1{width:380px;height:380px;left:-110px;top:-90px;background:radial-gradient(circle at 35% 35%,rgba(107,79,216,.28),transparent 70%)}
+.o2{width:340px;height:340px;right:-90px;top:32%;background:radial-gradient(circle,rgba(14,143,139,.26),transparent 70%);animation-delay:-5s}
+.o3{width:320px;height:320px;left:28%;bottom:-120px;background:radial-gradient(circle,rgba(245,165,36,.30),transparent 70%);animation-delay:-9s}
+@keyframes drift{to{transform:translate(40px,-50px) scale(1.15)}}
+#fx{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+#fx span{position:absolute;bottom:-60px;font:800 2rem "Baloo 2",sans-serif;color:var(--blue);opacity:0;animation:rise linear infinite}
+@keyframes rise{0%{transform:translateY(0) rotate(0);opacity:0}10%,90%{opacity:.14}100%{transform:translateY(-115vh) rotate(40deg);opacity:0}}
+@keyframes up{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+.view.on .wrap>*{animation:up .55s both}
+.view.on .wrap>*:nth-child(2){animation-delay:.05s}.view.on .wrap>*:nth-child(3){animation-delay:.1s}.view.on .wrap>*:nth-child(4){animation-delay:.15s}.view.on .wrap>*:nth-child(5){animation-delay:.2s}.view.on .wrap>*:nth-child(6){animation-delay:.25s}.view.on .wrap>*:nth-child(n+7){animation-delay:.3s}
+.wrap>h2:after{content:"";display:block;height:5px;width:64px;border-radius:5px;background:linear-gradient(90deg,var(--sun),var(--a));margin-top:6px;animation:grow .9s .25s both}
+@keyframes grow{from{width:0}to{width:64px}}
+.card{transition:box-shadow .25s,border-color .25s}.card:hover{box-shadow:0 12px 28px rgba(20,40,75,.13);border-color:#8FB0E3}
+button{position:relative;overflow:hidden}
+button:before{content:"";position:absolute;top:0;bottom:0;left:0;width:55%;background:linear-gradient(110deg,transparent,rgba(255,255,255,.42),transparent);transform:translateX(-140%) skewX(-18deg);pointer-events:none}
+button:hover:before{transform:translateX(240%) skewX(-18deg);transition:transform .7s}
+.sn{overflow:visible}.sn:before{display:none}
+.hello h2 .wv{display:inline-block;transform-origin:70% 70%;animation:wave 2.4s infinite}
+@keyframes wave{0%,60%,100%{transform:rotate(0)}10%{transform:rotate(16deg)}20%{transform:rotate(-8deg)}30%{transform:rotate(16deg)}40%{transform:rotate(-4deg)}50%{transform:rotate(10deg)}}
+.idc{max-width:620px;margin:0 auto 14px;border:2px dashed #8FB0E3}.idc.ok{border-style:solid;border-color:var(--n)}
+input:disabled{opacity:.7;cursor:not-allowed}
+.stepper{display:flex;flex-wrap:wrap;gap:6px 4px;justify-content:center;align-items:center;margin:4px auto 6px;max-width:780px}
+.stp{display:inline-flex;align-items:center;gap:6px;background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:4px 12px 4px 5px;font-size:.82rem;font-weight:700;color:var(--mut)}
+.stp i{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--pane);font:800 .75rem "Baloo 2",sans-serif;font-style:normal;color:var(--ink)}
+.stp.done{color:var(--n);border-color:var(--n)}.stp.done i{background:var(--n);color:#fff}
+.stp.now{color:#fff;background:var(--blue);border-color:var(--blue);animation:pulse2 1.8s infinite}.stp.now i{background:#fff;color:var(--blue)}
+@keyframes pulse2{50%{box-shadow:0 0 0 7px rgba(36,87,197,.18)}}
+.arr{color:var(--mut);font-size:1rem;font-weight:800}
+.mc .no{position:absolute;left:8px;top:6px;z-index:2;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:var(--ink);color:#fff;font:800 .72rem "Baloo 2",sans-serif;display:grid;place-items:center}
+.mc .lk{display:none;position:absolute;top:8px;right:10px;font-size:1rem}
+.mc.locked{filter:grayscale(.85)}.mc.locked .lk{display:block}.mc.locked .ck{display:none}.mc.locked:hover{transform:none;box-shadow:var(--sh)}
+.flowbar{display:flex;justify-content:flex-end;margin-top:22px}
+.flowbar button,.go{background:var(--n);box-shadow:0 2px 8px rgba(14,143,139,.3)}.flowbar button{font-size:1.05rem;padding:12px 26px}
+.flowbar button:hover,.go:hover{background:#0B7673}
+.res{text-align:center}.res .big{font-size:1.7rem}
+.res.up{animation:pop .6s cubic-bezier(.3,1.5,.5,1) both}
+.ring{--p:0;width:140px;height:140px;border-radius:50%;margin:6px auto 12px;display:grid;place-items:center;position:relative;background:conic-gradient(var(--n) calc(var(--p)*1%),var(--line) 0)}
+.ring:before{content:"";position:absolute;inset:13px;border-radius:50%;background:var(--card)}
+.ring b{position:relative;font:800 2.8rem "Baloo 2",sans-serif;color:var(--ink)}
+.plc{border-left:6px solid var(--sun)}
+.plc2{display:inline-block;margin:10px 0 2px;background:var(--pane);border-left:5px solid var(--sun);border-radius:10px;padding:7px 14px}
+.sendst{display:inline-block;margin:8px 0;padding:4px 14px;border-radius:999px;font-size:.85rem;font-weight:700}
+.sendst.okk{background:#CDEFD8;color:#0B6B67}.sendst.wait{background:#FFE9BE;color:#8A5A00}
+.lockn{background:#FFE9BE;border-radius:10px;padding:7px 12px;font-size:.92rem;margin:8px 0}
+.flo{padding-left:1.3em;margin:8px 0 0}.flo li{margin:6px 0}
+#lvup{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:rgba(20,40,75,.55);animation:fadein .3s both}
+#lvup>div{background:var(--card);border-radius:24px;padding:28px 44px;text-align:center;animation:pop .6s cubic-bezier(.3,1.5,.5,1) both;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#lvup .e{font-size:4rem;animation:bob 1.2s infinite}
+#lvup b{display:block;font:800 1.9rem "Baloo 2",sans-serif;color:var(--blue)}
+@keyframes fadein{from{opacity:0}}
+#pqf .card{animation:up .5s calc(var(--i,0)*.05s) both}
+.card.wrong{animation:shk .45s}
+@keyframes shk{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.q{animation:up .45s calc(var(--i,0)*.06s) both}
+.q.qok{animation:okp .5s}.q.qno{animation:shk .45s}
+@keyframes okp{40%{transform:scale(1.02)}}
+.tab:disabled{opacity:.45;cursor:not-allowed}
+@media(max-width:640px){.stp{font-size:.74rem;padding:3px 9px 3px 4px}.ring{width:120px;height:120px}.ring b{font-size:2.3rem}.flowbar button{width:100%}}
+</style>
+</head>
+<body>
+<div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
+<div id="fx" aria-hidden="true"><span style="left:5%;animation-duration:21s;animation-delay:-2s">log</span><span style="left:15%;animation-duration:26s;animation-delay:-11s">2ˣ</span><span style="left:26%;animation-duration:19s;animation-delay:-6s">∑</span><span style="left:38%;animation-duration:24s;animation-delay:-15s">π</span><span style="left:49%;animation-duration:28s;animation-delay:-4s">√</span><span style="left:60%;animation-duration:20s;animation-delay:-9s">10ⁿ</span><span style="left:71%;animation-duration:25s;animation-delay:-18s">÷</span><span style="left:81%;animation-duration:22s;animation-delay:-1s">x=3</span><span style="left:90%;animation-duration:27s;animation-delay:-13s">∞</span><span style="left:32%;animation-duration:30s;animation-delay:-20s">log₂8</span></div>
+
+<!-- COVER -->
+<section class="view on" id="cover">
+  <span class="sym" style="left:7%;top:10%">log</span><span class="sym" style="right:9%;top:16%;animation-delay:-2s">2ˣ</span>
+  <span class="sym" style="left:12%;bottom:14%;animation-delay:-4s">x = 3</span><span class="sym" style="right:10%;bottom:12%;font-size:4.4rem;animation-delay:-6s">log₂8</span>
+  <span class="sym" style="left:48%;top:5%;font-size:2.6rem;animation-delay:-3s">10³</span>
+  <span class="badge late" style="animation-delay:.2s">E-Modul Interaktif · Matematika · Kelas X</span>
+  <h1 class="logo" aria-label="LOGIMATH"><span style="animation-delay:.3s">L</span><span style="animation-delay:.4s">O</span><span style="animation-delay:.5s">G</span><span style="animation-delay:.6s">I</span><span style="animation-delay:.7s">M</span><span style="animation-delay:.8s">A</span><span style="animation-delay:.9s">T</span><span style="animation-delay:1s">H</span></h1>
+  <p class="late" style="animation-delay:1.4s;font-size:1.3rem;margin:0 auto;max-width:30ch">“Temukan eksponen yang hilang, taklukkan dunia logaritma!”</p>
+  <div class="author late" style="animation-delay:1.8s">Disusun oleh<b>Zulaikah Az-Zahro</b></div>
+  <button class="start" data-go="dash">Mulai belajar ▶</button>
+</section>
+
+<!-- DASHBOARD -->
+<section class="view" id="dash"><div class="wrap">
+  <div class="hello"><div class="badge">Dashboard</div><h2>Selamat datang di LOGIMATH <span class="wv">👋</span></h2><p class="mut" style="margin:auto">Isi identitasmu, klik <b>Mulai</b>, lalu ikuti alur bernomor 1 → 6.</p></div>
+  <div class="card idc" id="idc"><b>👤 Identitas siswa</b><div class="ctl" style="justify-content:flex-start"><input id="nm" placeholder="Nama lengkap" aria-label="Nama lengkap" style="flex:1 1 220px"><input id="kl" placeholder="Kelas (mis. X-A)" aria-label="Kelas" style="width:150px"><button id="stb">Mulai ▶</button><button class="ghost" id="chg" style="display:none">Ganti siswa</button></div><p class="mut" id="idm" style="margin:8px 0 0;font-size:.9rem">Isi nama dan kelas, lalu klik Mulai. Nilai pretest dan LKPD terkirim otomatis ke gurumu.</p></div>
+  <div class="stepper" id="stp"></div>
+  <div class="prog"><i id="pg"></i></div>
+  <div class="grid" id="menu"></div>
+</div></section>
+
+<!-- PRETEST -->
+<section class="view sub" id="pretest"><div class="wrap">
+  <h2>🧭 Pretest</h2>
+  <p>Kerjakan 10 soal pilihan ganda tentang perpangkatan (belum membahas logaritma), sendiri dan tanpa kalkulator. Tiap soal bernilai 10. <b>Setelah kamu klik Kumpulkan, jawaban terkunci</b>, nilai <b>terkirim otomatis ke guru</b>, dan tingkat LKPD-mu <b>ditentukan otomatis</b>.</p>
+  <div id="pqf"></div>
+  <div class="ctl"><button id="pqb">Kumpulkan jawaban</button></div>
+  <div class="card" id="pqm" style="text-align:center;font-size:1.1rem">Pilih satu jawaban untuk tiap soal.</div>
+</div></section>
+
+<!-- TUJUAN -->
+<section class="view sub" id="tujuan"><div class="wrap">
+  <h2>🎯 Tujuan Pembelajaran</h2>
+  <div class="card"><p style="margin:0">Setelah mengikuti pembelajaran berbasis masalah ini, peserta didik mampu:</p>
+  <ul class="tg">
+   <li style="--i:1">menjelaskan arti logaritma sebagai kebalikan dari perpangkatan;</li>
+   <li style="--i:2">mengubah bentuk pangkat ke bentuk logaritma dan sebaliknya;</li>
+   <li style="--i:3">menggunakan sifat-sifat logaritma untuk menghitung;</li>
+   <li style="--i:4">menyelesaikan masalah kontekstual (pertumbuhan eksponensial) dengan logaritma;</li>
+   <li style="--i:5">bekerja sama dan bernalar kritis dalam menyelidiki masalah.</li></ul></div>
+  <div class="card"><b>🗺️ Alur belajarmu</b>
+   <ol class="flo">
+    <li><b>Pretest</b> ✔ nilai terkirim otomatis ke guru dan menentukan tingkat awalmu.</li>
+    <li><b>Tujuan</b> ← kamu di sini.</li>
+    <li><b>Materi</b>: pahami konsep dan sifat logaritma.</li>
+    <li><b>Masalah PBL</b>: selidiki tantangan viral lewat 5 langkah.</li>
+    <li><b>LKPD</b>: selesaikan tingkatmu. Tuntas berarti otomatis naik tingkat.</li>
+    <li><b>Refleksi</b>: nilai dirimu sendiri.</li></ol></div>
+  <div class="card"><b>Sintaks PBL</b><p class="mut" style="margin:4px 0 0">1 Orientasi masalah → 2 Mengorganisasi peserta didik → 3 Membimbing penyelidikan → 4 Mengembangkan dan menyajikan hasil → 5 Menganalisis dan mengevaluasi proses.</p></div>
+</div></section>
+
+<!-- MATERI -->
+<section class="view sub" id="materi"><div class="wrap">
+  <h2>📘 Materi Logaritma</h2>
+  <p>Logaritma adalah cara mencari eksponen. “2 dipangkatkan berapa supaya jadi 8?” dijawab dengan <sup>2</sup>log 8 = 3.</p>
+  <div class="card" style="text-align:center"><div class="eq" id="eq"></div>
+   <div class="ctl"><label>Basis <select id="sa"><option>2</option><option>3</option><option>5</option><option>10</option></select></label>
+   <label>Eksponen <select id="sn"><option>1</option><option>2</option><option selected>3</option><option>4</option></select></label>
+   <button id="fl">Ubah bentuk</button></div>
+   <p class="mut" style="margin:10px auto 0;font-size:.95rem"><b class="a">Basis</b> · <b class="n">eksponen = hasil logaritma</b> · <b class="c">numerus</b></p></div>
+  <p><b>Syarat:</b> <sup>a</sup>log c = n artinya aⁿ = c, dengan a &gt; 0, a ≠ 1, c &gt; 0.</p>
+  <h3 style="margin-top:1.4em">Sifat-sifat (klik untuk contoh)</h3><div id="props"></div>
+</div></section>
+
+<!-- PBL -->
+<section class="view sub" id="pbl"><div class="wrap">
+  <h2>🧩 Masalah dan Alur PBL</h2>
+  <div class="steps" id="steps"></div><div id="ph"></div>
+</div></section>
+
+<!-- LKPD -->
+<section class="view sub" id="lkpd"><div class="wrap">
+  <h2>📝 LKPD 3 Tingkatan</h2>
+  <p>Tingkat awalmu ditentukan <b>otomatis</b> dari nilai pretest. Baca masalahnya, jawab dengan angka (boleh pakai koma, mis. 1,5), lalu tekan <b>Cek</b>. <b>Sekali Cek, jawaban terkunci.</b> Nilai terkirim otomatis ke guru, dan kalau tingkatmu tuntas kamu langsung naik ke tingkat berikutnya.</p>
+  <div class="card plc" id="plc"></div>
+  <div class="tabs" id="tabs"></div><div class="card" id="lk"></div>
+  <p class="mut" style="font-size:.9rem"><b>Catatan guru (TaRL):</b> peserta didik dikelompokkan sesuai level kemampuan. Tingkat 1 memahami konsep, tingkat 2 menerapkan sifat, tingkat 3 bernalar dan memecahkan masalah (HOTS). Tiap tingkat memakai masalah kontekstual berbasis PBL.</p>
+</div></section>
+
+<!-- REFLEKSI -->
+<section class="view sub" id="refleksi"><div class="wrap">
+  <h2>🪞 Refleksi</h2><p class="mut">Jujur pada dirimu sendiri. Tandai tiap pernyataan.</p>
+  <div class="card" id="rf"></div><div class="card" id="rfm" style="text-align:center;font-size:1.1rem"></div>
+</div></section>
+
+<!-- TENTANG -->
+<section class="view sub" id="tentang"><div class="wrap">
+  <h2>ℹ️ Tentang Modul</h2>
+  <div class="card"><table>
+   <tr><td class="mut" style="text-align:left">Judul</td><td style="text-align:left"><b>LOGIMATH</b></td></tr>
+   <tr><td class="mut" style="text-align:left">Penyusun</td><td style="text-align:left"><b>Zulaikah Az-Zahro</b></td></tr>
+   <tr><td class="mut" style="text-align:left">Mata pelajaran</td><td style="text-align:left">Matematika</td></tr>
+   <tr><td class="mut" style="text-align:left">Kelas / Fase</td><td style="text-align:left">X / Fase E</td></tr>
+   <tr><td class="mut" style="text-align:left">Materi</td><td style="text-align:left">Logaritma</td></tr>
+   <tr><td class="mut" style="text-align:left">Model</td><td style="text-align:left">Problem Based Learning (PBL)</td></tr></table></div>
+  <p class="mut">Modul ini dirancang untuk membantu peserta didik menemukan sendiri konsep logaritma melalui masalah nyata.</p>
+</div></section>
+
+<div id="mus"><button id="mu" aria-label="Nyalakan atau matikan musik" aria-pressed="false">🔇</button><input type="range" id="mv" min="0" max="100" value="60" aria-label="Volume musik"></div><div id="mt" role="status" style="display:none"></div>
+
+<script>
+/* === PENGATURAN GURU === */
+var SHEET_URL='https://script.google.com/macros/s/AKfycby-cD2oWBml_QUmSLqmsZlyh3TypW5M1NHZ72mdK7EL8CfSB9RMyuHhHgF4-GQt4nsw/exec';      /* tempel URL aplikasi web Google Apps Script di antara tanda kutip */
+var SHEET_KODE='LOGIMATH'; /* harus sama dengan kode di Apps Script */
+var $=function(i){return document.getElementById(i)};
+var L=function(a){return '<sup class="a">'+a+'</sup>log '};
+var T=function(c,t){return '<b class="t '+c+'">'+t+'</b>'};
+var fmt=function(x){return x.toLocaleString('id-ID')};
+/* navigasi */
+var M=[['pretest','🧭','Pretest','Cek kemampuan awalmu sebelum belajar','#BFD6FF'],['tujuan','🎯','Tujuan','Apa yang akan kamu capai','#A8E6DD'],['materi','📘','Materi','Konsep dan sifat logaritma','#FFDF9E'],['pbl','🧩','Masalah PBL','Tantangan Viral + 5 langkah PBL','#FFC9B8'],['lkpd','📝','LKPD','3 tingkat sesuai hasil pretest','#D3CCFF'],['refleksi','🪞','Refleksi','Seberapa paham kamu?','#BDE8C4'],['tentang','ℹ️','Tentang Modul','Identitas dan penyusun','#D5DEEC']];
+var FLOW=['pretest','tujuan','materi','pbl','lkpd','refleksi'],TTL={};
+M.forEach(function(m){TTL[m[0]]=m[2]});
+var KKM=60; /* nilai LKPD minimal agar otomatis naik tingkat */
+var S=null,SK='';
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function skey(n,k){return 'lgm2|'+n.toLowerCase().replace(/\s+/g,' ')+'|'+k.toLowerCase().replace(/\s+/g,'')}
+function blank(){return {pre:null,unl:0,lk:{},seen:{}}}
+function save(){if(!SK)return;try{localStorage.setItem(SK,JSON.stringify(S))}catch(e){}}
+function loadS(){var r=null;try{r=localStorage.getItem(SK)}catch(e){}try{S=r?JSON.parse(r):blank()}catch(e){S=blank()}if(!S||typeof S!='object')S=blank();if(!S.lk)S.lk={};if(!S.seen)S.seen={};if(!S.unl)S.unl=0}
+$('menu').innerHTML=M.map(function(m,i){var fi=FLOW.indexOf(m[0]);return '<button class="mc" id="mc-'+m[0]+'" data-go="'+m[0]+'" style="--i:'+(i+1)+';--k:'+m[4]+'">'+(fi>=0?'<span class="no">'+(fi+1)+'</span>':'')+'<span class="ck">✔</span><span class="lk">🔒</span><span class="ic">'+m[1]+'</span><h3>'+m[2]+'</h3><p>'+m[3]+'</p></button>'}).join('');
+$('menu').insertAdjacentHTML('beforeend','<button class="mc" data-go="cover" style="--i:8;--k:#FFC9B8"><span class="ic">🏠</span><h3>Halaman Utama</h3><p>Kembali ke cover</p></button>');
+document.querySelectorAll('.sub .wrap').forEach(function(w){w.insertAdjacentHTML('afterbegin','<div class="top"><button class="ghost" data-go="dash">← Menu</button><b>LOGIMATH</b></div>')});
+FLOW.forEach(function(id,i){if(id=='pretest')return;var nx=FLOW[i+1];
+ document.querySelector('#'+id+' .wrap').insertAdjacentHTML('beforeend','<div class="flowbar">'+(nx?'<button data-go="'+nx+'">Lanjut ke '+TTL[nx]+' ▶</button>':'<button data-go="dash">Selesai · kembali ke Menu 🏁</button>')+'</div>')});
+function isDone(id){return !!(S&&(id=='pretest'?S.pre:(S.pre&&S.seen[id])))}
+function progR(){$('pg').style.width=(FLOW.filter(isDone).length/FLOW.length*100)+'%'}
+function menuR(){M.forEach(function(m){var id=m[0],b=$('mc-'+id),lk=!S||(id!='pretest'&&id!='tentang'&&!S.pre);b.classList.toggle('locked',lk);b.classList.toggle('seen',isDone(id)||!!(S&&id=='tentang'&&S.seen[id]))})}
+function stepR(){var now=-1,h=[];FLOW.forEach(function(id,i){if(now<0&&S&&!isDone(id))now=i});
+ FLOW.forEach(function(id,i){h.push('<span class="stp '+(isDone(id)?'done':i==now?'now':'')+'"><i>'+(isDone(id)?'✔':i+1)+'</i>'+TTL[id]+'</span>')});$('stp').innerHTML=h.join('<span class="arr">›</span>')}
+function allowed(id){
+ if(!S){nav('dash');toast('Isi Nama dan Kelas, lalu klik Mulai dulu.');return false}
+ if(id=='pretest'||id=='tentang')return true;
+ if(!S.pre){toast('Kerjakan Pretest dulu ya 🧭');return false}
+ return true}
+function nav(id){
+ if(id!='cover'&&id!='dash'&&!allowed(id))return;
+ if(id!='cover')$('cover').classList.add('again');
+ if(id=='dash'&&!nav.d){nav.d=1;setTimeout(function(){$('dash').classList.add('shown')},1500)}
+ document.querySelectorAll('.view').forEach(function(v){v.classList.remove('on')});$(id).classList.add('on');window.scrollTo(0,0);
+ if(S&&id!='dash'&&id!='cover'){S.seen[id]=1;save()}
+ if(id=='pretest')pqEnter();if(id=='lkpd')lkEnter();
+ progR();menuR();stepR()}
+document.addEventListener('click',function(e){var b=e.target.closest('[data-go]');if(b)nav(b.dataset.go)});
+function startS(){var n=$('nm').value.trim().replace(/\s+/g,' '),k=$('kl').value.trim();
+ if(n.length<3){toast('Isi Nama lengkap dulu.');$('nm').focus();return}
+ if(!k){toast('Isi Kelas dulu (mis. X-A).');$('kl').focus();return}
+ SK=skey(n,k);loadS();S.id={n:n,k:k};save();
+ $('nm').value=n;$('nm').disabled=$('kl').disabled=true;$('stb').style.display='none';$('chg').style.display='';$('idc').classList.add('ok');
+ $('idm').innerHTML='Halo, <b>'+esc(n)+'</b> ('+esc(k)+')! '+(S.pre?'Progresmu dipulihkan, lanjutkan sesuai alur di bawah.':'Mulai dari <b>Pretest</b> ya.');
+ pqR();pqEnter.g=0;if(S.pre)pqEnter();
+ menuR();stepR();progR();flush();toast('Siap! Ikuti alur bernomor 1 → 6.')}
+$('stb').onclick=startS;$('nm').onkeydown=$('kl').onkeydown=function(e){if(e.key=='Enter')startS()};
+$('chg').onclick=function(){clearInterval(lkT);S=null;SK='';$('nm').disabled=$('kl').disabled=false;$('nm').value=$('kl').value='';$('stb').style.display='';$('chg').style.display='none';$('idc').classList.remove('ok');
+ $('idm').textContent='Isi nama dan kelas, lalu klik Mulai. Nilai pretest dan LKPD terkirim otomatis ke gurumu.';pqR();pqEnter.g=0;cur=0;tabsR();lkR();menuR();stepR();progR()}
+function confetti(){for(var i=0;i<26;i++){var s=document.createElement('span');s.className='conf';s.textContent=['⭐','✨','🎉','➗'][i%4];s.style.left=Math.random()*100+'vw';s.style.animationDelay=Math.random()*.6+'s';document.body.appendChild(s);setTimeout(function(x){x.remove()},3200,s)}}
+/* materi */
+var form=0;
+function drawEq(){var a=+$('sa').value,n=+$('sn').value,c=Math.pow(a,n),e=$('eq');e.className='eq flip';void e.offsetWidth;
+ var P='<div class="f"'+(form?' style="opacity:.4"':'')+'>'+T('a',a)+'<sup class="n">'+n+'</sup> = '+T('c',c)+'</div>';
+ var G='<div class="f"'+(form?'':' style="opacity:.4"')+'>'+L(a)+T('c',c)+' = '+T('n',n)+'</div>';
+ e.innerHTML=P+'<span class="swap">⇄</span>'+G}
+$('sa').onchange=$('sn').onchange=drawEq;$('fl').onclick=function(){form=1-form;drawEq()};drawEq();
+setInterval(function(){if($('materi').classList.contains('on')){form=1-form;drawEq()}},4500);
+var P=[['Sifat khusus',L('a')+'a = 1 dan '+L('a')+'1 = 0','<sup>5</sup>log 5 = <b>1</b> dan <sup>5</sup>log 1 = <b>0</b>'],
+ ['Perkalian',L('a')+'(b · c) = '+L('a')+'b + '+L('a')+'c','<sup>2</sup>log (4 · 8) = 2 + 3 = <b>5</b>'],
+ ['Pembagian',L('a')+'(b / c) = '+L('a')+'b − '+L('a')+'c','<sup>2</sup>log (32 / 4) = 5 − 2 = <b>3</b>'],
+ ['Pangkat',L('a')+'b<sup>n</sup> = n · '+L('a')+'b','<sup>2</sup>log 8<sup>2</sup> = 2 · 3 = <b>6</b>'],
+ ['Ubah basis',L('a')+'b = log b / log a','<sup>4</sup>log 8 = <sup>2</sup>log 8 / <sup>2</sup>log 4 = 3 / 2 = <b>1,5</b>']];
+$('props').innerHTML=P.map(function(p){return '<details><summary>'+p[0]+': '+p[1]+'</summary><div class="ex">Contoh: '+p[2]+'</div></details>'}).join('');
+/* PBL */
+var PH=[
+['Orientasi pada masalah','<div class="card story"><h3>📱 Tantangan Viral</h3><p>Zahra mengunggah video belajar matematika. Setiap jam, jumlah penontonnya menjadi <b>2 kali lipat</b> dari jam sebelumnya. Awalnya hanya 1 penonton. Zahra bermimpi videonya ditonton <b>1.000.000 orang</b>.</p><p style="margin:0"><b>Kapan target itu tercapai?</b></p></div><div class="card"><b>Diskusikan:</b><ol><li>Apa yang diketahui dan apa yang ditanyakan?</li><li>Mengapa jawabannya tidak bisa ditebak dengan menambah?</li><li>Menurutmu, alat matematika apa yang cocok?</li></ol></div>'],
+['Mengorganisasi peserta didik','<div class="card"><p>Bentuk kelompok 4–5 orang. Bagi peran: ketua, pencatat, penghitung, penyaji. Mulailah dengan melengkapi tabel pertumbuhan.</p><table><tr><th>Jam ke-t</th><th>Penonton</th><th>Bentuk pangkat</th></tr><tbody id="tb"></tbody></table><div class="ctl"><button id="tbb">Isi baris berikutnya</button></div></div><div class="card">Dari pola tabel: penonton = <b>2<sup>t</sup></b>. Target tercapai saat <b>2<sup>t</sup> = 1.000.000</b>. Bagaimana mencari <i>t</i>? Itulah yang akan kamu selidiki.</div>'],
+['Membimbing penyelidikan','<div class="card"><p>Geser jam dan amati. Kapan penontonnya mencapai target?</p><div class="eq"><span>t = <span class="big" id="tv">0</span> jam</span></div><input type="range" id="sl" min="0" max="24" value="0" aria-label="Jam ke-t"><p>Penonton: <b class="big" id="pv">1</b></p><div class="rail"><i id="rl"></i></div><p id="pm" class="mut">Target 1.000.000 belum tercapai.</p></div><div class="card">Kamu menemukan: t ada di antara <b>19</b> dan <b>20</b> jam. Untuk nilai tepatnya, ubah ke bentuk logaritma: <b>t = '+L(2)+'1.000.000</b>.</div>'],
+['Mengembangkan dan menyajikan hasil','<div class="card"><p>Presentasikan penyelesaian kelompokmu. Bandingkan dengan langkah berikut (diketahui log 2 ≈ 0,301).</p><div id="sv"></div><div class="ctl"><button id="svb">Langkah berikutnya</button></div></div>'],
+['Menganalisis dan mengevaluasi','<div class="card"><h3>Masalah baru</h3><p>Sekarang setiap jam penonton menjadi <b>3 kali lipat</b>. Berapa jam sampai 1.000.000? (diketahui log 3 ≈ 0,477; tulis dalam jam, boleh dibulatkan)</p><div class="ctl"><input id="nw" inputmode="decimal" aria-label="Jawaban"><button id="nwb">Cek</button><b id="nwf"></b></div></div><div class="card"><b>Evaluasi proses:</b><ul><li>Strategi apa yang paling membantu kelompokmu?</li><li>Apa kesulitan terbesar dan bagaimana mengatasinya?</li><li>Di mana lagi kamu menemui pertumbuhan seperti ini?</li></ul><p style="margin:0">Lanjutkan ke menu <b>LKPD</b> dan <b>Refleksi</b>.</p></div>']];
+var ps=0,pd={};
+function phR(){$('steps').innerHTML=PH.map(function(p,i){return '<button class="sn '+(i==ps?'on':pd[i]?'ok':'')+'" data-p="'+i+'"><i>'+(pd[i]&&i!=ps?'✔':i+1)+'</i><span class="lb">'+p[0]+'</span></button>'}).join('');
+ $('ph').innerHTML='<div class="card" style="margin-top:0;border-color:var(--sun)"><b class="mut">Fase '+(ps+1)+' dari 5</b><h3>'+PH[ps][0]+'</h3></div>'+PH[ps][1]+
+ '<div class="ctl" style="justify-content:space-between"><button class="ghost" '+(ps?'':'disabled style="opacity:.3"')+' data-d="-1">← Sebelumnya</button><button data-d="1" '+(ps==4?'style="display:none"':'')+'>Berikutnya →</button></div>';
+ pd[ps]=1;[0,tbl,sim,sol,nw][ps]&&[0,tbl,sim,sol,nw][ps]()}
+$('steps').onclick=function(e){var b=e.target.closest('[data-p]');if(b){ps=+b.dataset.p;phR()}};
+$('ph').onclick=function(e){var b=e.target.closest('[data-d]');if(b){ps+=+b.dataset.d;phR();window.scrollTo(0,0)}};
+function tbl(){var r=0;$('tbb').onclick=function(){if(r>5){$('tbb').textContent='Pola: 2ᵗ';return}var tr=document.createElement('tr');tr.className='rv';tr.innerHTML='<td>'+r+'</td><td>'+fmt(Math.pow(2,r))+'</td><td>2<sup>'+r+'</sup></td>';$('tb').appendChild(tr);r++}}
+function sim(){$('sl').oninput=function(){var t=+this.value,v=Math.pow(2,t);$('tv').textContent=t;$('pv').textContent=fmt(v);
+ $('rl').style.width=Math.min(100,v/10000)+'%';var ok=v>=1e6;$('pm').className=ok?'n':'mut';$('pm').textContent=ok?'Target tercapai! Lebih dari 1.000.000 penonton.':'Target 1.000.000 belum tercapai.';if(t==20&&!sim.d){sim.d=1;confetti()}}}
+function sol(){var S=['Persamaan: 2<sup>t</sup> = 1.000.000','Ubah ke logaritma: t = <sup>2</sup>log 1.000.000','Ubah basis ke 10: t = log 10<sup>6</sup> / log 2','Sifat pangkat: t = 6 · log 10 / log 2 = 6 / 0,301','t ≈ <b>19,93 jam</b>. Karena jam penuh, target tercapai pada jam ke-<b>20</b>.'],i=0;
+ $('sv').innerHTML='';$('svb').onclick=function(){if(i<S.length){var d=document.createElement('div');d.className='st';d.innerHTML=(i+1)+'. '+S[i];$('sv').appendChild(d);i++;if(i==S.length){this.style.display='none';confetti()}}}}
+function nw(){$('nwb').onclick=function(){var v=parseFloat($('nw').value.replace(',','.')),f=$('nwf');if(isNaN(v)){f.textContent='Isi dulu';return}
+ var ok=Math.abs(v-12.58)<=.5;f.className=ok?'ok':'no';f.textContent=ok?'Benar! t = 6 / 0,477 ≈ 12,6 jam':'Coba lagi: t = 6 / log 3';if(ok)confetti()}}
+phR();
+/* LKPD */
+var D=[
+ {nm:'Tingkat 1 · Dasar',tj:'Memahami arti logaritma lewat masalah nyata',
+  st:'<b>🧫 Masalah: Bakteri di Cawan Petri.</b> Di laboratorium sekolah, 1 sel bakteri membelah menjadi 2 setiap jam. Tim peneliti ingin tahu <b>berapa jam</b> yang dibutuhkan agar jumlah sel mencapai jumlah tertentu.<br><span class="mut">Langkah PBL: pahami masalah → tulis model 2<sup>t</sup> → selidiki → jawab.</span>',
+  q:[['Berapa sel bakteri setelah 3 jam?',8,0,'2 × 2 × 2 = 2³ = 8 sel.'],
+     ['Nyatakan 2³ = 8 dalam bentuk logaritma: '+L(2)+'8 = …',3,0,'Karena 2³ = 8, maka '+L(2)+'8 = 3.'],
+     ['Berapa jam agar sel menjadi 16? ('+L(2)+'16)',4,0,'2⁴ = 16, jadi '+L(2)+'16 = 4 jam.'],
+     ['Berapa jam agar sel menjadi 64?',6,0,'2⁶ = 64, jadi '+L(2)+'64 = 6 jam.'],
+     ['Jika bakteri jenis lain membelah jadi 3 tiap jam, berapa jam agar menjadi 81?',4,0,'3⁴ = 81, jadi '+L(3)+'81 = 4 jam.']]},
+ {nm:'Tingkat 2 · Menengah',tj:'Menerapkan sifat logaritma pada masalah nyata',
+  st:'<b>🧪 Masalah: Uji pH Air Sumur.</b> Tim IPA sekolah menguji kualitas air. Tingkat keasaman dihitung dengan <b>pH = −log [H⁺]</b>. Gunakan log 2 ≈ 0,301 dan log 10 = 1.<br><span class="mut">Langkah PBL: tulis rumus → ubah [H⁺] ke bentuk pangkat 10 → pakai sifat logaritma → simpulkan.</span>',
+  q:[['Air hujan: [H⁺] = 10⁻³. Berapa pH-nya?',3,0,'pH = −log 10⁻³ = −(−3) = 3.'],
+     ['Air murni: [H⁺] = 10⁻⁷. Berapa pH-nya?',7,0,'pH = −log 10⁻⁷ = 7.'],
+     ['Sampel A: [H⁺] = 0,0001. Berapa pH-nya?',4,0,'0,0001 = 10⁻⁴, jadi pH = 4.'],
+     ['Sampel B: [H⁺] = 2 × 10⁻³. Berapa pH-nya? (pakai sifat perkalian, bulatkan 1 angka di belakang koma)',2.7,.06,'log (2 × 10⁻³) = log 2 + log 10⁻³ = 0,301 − 3 = −2,699. Jadi pH ≈ 2,7.'],
+     ['Sampel pH 5 dibanding air murni pH 7. Berapa kali lipat lebih asam?',100,0,'Selisih pH = 2, jadi 10² = 100 kali lipat.']]},
+ {nm:'Tingkat 3 · Lanjut (HOTS)',tj:'Bernalar dan memecahkan masalah kompleks',
+  st:'<b>📱 Masalah: Strategi Video Viral Zahra.</b> Zahra ingin videonya mencapai <b>1.000.000 penonton</b>. Ia membandingkan beberapa strategi penyebaran. Gunakan log 2 ≈ 0,301, log 3 ≈ 0,477, dan log 10 = 1. Jawaban boleh berupa desimal (bulatkan 1 angka di belakang koma) atau jam penuh.<br><span class="mut">Langkah PBL: buat model → pilih sifat yang tepat → hitung → bandingkan strategi → evaluasi.</span>',
+  q:[['Penonton berlipat 4 tiap jam mulai dari 1. Berapa jam sampai 1.000.000?',9.97,.15,'t = log 1.000.000 / log 4 = 6 / 0,602 ≈ 9,97 jam, atau 10 jam penuh.'],
+     ['Penonton berlipat 2 tiap jam mulai dari 500. Berapa jam sampai 1.024.000?',11,0,'500 × 2ᵗ = 1.024.000, sehingga 2ᵗ = 2.048 dan t = '+L(2)+'2.048 = 11 jam.'],
+     ['Penonton berlipat 2 tiap jam mulai dari 1. Berapa jam sampai 10.000.000?',23.26,.15,'t = log 10.000.000 / log 2 = 7 / 0,301 ≈ 23,3 jam, atau 24 jam penuh.'],
+     ['Target hari ke-t memenuhi '+L(2)+'(t + 1) = 4. Berapa t?',15,0,'t + 1 = 2⁴ = 16, jadi t = 15.'],
+     ['Strategi ×3 per jam dibanding ×2 per jam (target 1.000.000, mulai dari 1). Berapa jam lebih cepat?',7.35,.15,'×2: 6 / 0,301 ≈ 19,93 jam. ×3: 6 / 0,477 ≈ 12,58 jam. Selisih ≈ 7,35 jam (jam penuh: 7 atau 8).']]}];
+var cur=0,lkT=0;
+function tabsR(){var ok=S&&S.pre,st=ok?S.pre.lv:0;$('tabs').innerHTML=D.map(function(t,i){var l=ok?(i<st?'skip':i>S.unl?'lock':'open'):'lock',f=ok&&S.lk[i]&&S.lk[i].fin;
+ return '<button class="tab" aria-selected="'+(cur===i)+'" data-i="'+i+'"'+(l!='open'?' disabled':'')+'>'+(l=='lock'?'🔒 ':l=='skip'?'⏭ ':f?'✔ ':'')+t.nm+'</button>'}).join('')}
+$('tabs').onclick=function(e){var b=e.target.closest('[data-i]');if(!b||b.disabled)return;clearInterval(lkT);cur=+b.dataset.i;tabsR();lkR()};
+function qRow(i,q,a){var d=a!==undefined;return '<div class="q'+(d?(a.ok?' qok':' qno'):'')+'" style="--i:'+i+'"><span class="tx">'+(i+1)+'. '+q[0]+'</span><input id="i'+i+'" inputmode="decimal" aria-label="Jawaban soal '+(i+1)+'"'+(d?' disabled value="'+esc(a.v)+'"':'')+'><button class="ghost" data-k="'+i+'"'+(d?' disabled':'')+'>Cek</button><span class="fb '+(d?(a.ok?'ok':'no'):'')+'" id="f'+i+'">'+(d?(a.ok?'Benar! ⭐':'Kurang tepat'):'')+'</span><div class="hint" id="h'+i+'"'+(d?'':' style="display:none"')+'>💡 Pembahasan: '+q[3]+'</div></div>'}
+function lkEnter(){if(!S||!S.pre){$('plc').innerHTML='🔒 Kerjakan <b>Pretest</b> dulu. Tingkat LKPD terbuka otomatis setelah nilainya keluar.';tabsR();lkR();return}
+ $('plc').innerHTML='🔑 Nilai pretest <b>'+S.pre.sc+'</b>, jadi kamu mulai dari <b>'+D[S.pre.lv].nm+'</b>. Selesaikan satu tingkat dengan nilai ≥ '+KKM+', maka kamu <b>otomatis naik</b> ke tingkat berikutnya.';
+ cur=S.unl;tabsR();lkR()}
+function lkR(){
+ if(!S||!S.pre){$('lk').innerHTML='<p class="mut" style="margin:0">🔒 Kerjakan <b>Pretest</b> dulu. Setelah nilainya keluar, tingkat LKPD-mu terbuka otomatis.</p>';return}
+ var t=D[cur],st=S.lk[cur]=S.lk[cur]||{a:{},fin:false};
+ $('lk').innerHTML='<h3>'+t.nm+'</h3><p class="mut">Tujuan: '+t.tj+'</p><div class="story">'+t.st+'</div><p class="lockn">🔒 Satu kali jawab: setelah kamu klik <b>Cek</b>, jawabanmu terkunci dan tidak bisa diubah.</p><div class="bar"><i id="bi"></i></div><div id="sc" class="mut"></div><div id="lkres"></div>'+t.q.map(function(q,i){return qRow(i,q,st.a[i])}).join('');
+ if(st.fin)showRes(cur,false);upd()}
+$('lk').onclick=function(e){var b=e.target.closest('button');if(!b||b.disabled)return;if(b.dataset.k!==undefined)lkCheck(+b.dataset.k);else if(b.id=='lkgo')advance()};
+function lkCheck(k){var st=S.lk[cur]=S.lk[cur]||{a:{},fin:false};if(st.a[k]!==undefined||st.fin)return;
+ var inp=$('i'+k),raw=inp.value.trim(),v=parseFloat(raw.replace(/\s/g,'').replace(',','.')),f=$('f'+k);
+ if(isNaN(v)){f.className='fb no';f.textContent='Isi jawaban dulu (angka)';inp.focus();return}
+ var q=D[cur].q[k],tol=q[2]||.001,ok=Math.abs(v-q[1])<=tol+1e-9||(tol>.05&&(v==Math.round(q[1])||v==Math.ceil(q[1])));
+ st.a[k]={v:raw,ok:ok};save();
+ var row=inp.parentNode;inp.disabled=true;row.querySelector('button').disabled=true;
+ f.className='fb '+(ok?'ok':'no');f.textContent=ok?'Benar! ⭐':'Kurang tepat';$('h'+k).style.display='block';row.classList.add(ok?'qok':'qno');
+ upd()}
+function upd(){var st=S.lk[cur],tot=D[cur].q.length,n=0,a=0,k;for(k in st.a){a++;if(st.a[k].ok)n++}
+ $('bi').style.width=(a/tot*100)+'%';$('sc').textContent='Terjawab '+a+' dari '+tot+(a?' · Benar '+n:'');
+ if(a==tot&&!st.fin)lkFinish()}
+function lkFinish(){var L=cur,st=S.lk[L],tot=D[L].q.length,n=0,w=[],k;for(k in st.a){if(st.a[k].ok)n++;else w.push(+k+1)}
+ st.fin=true;st.sc=Math.round(n/tot*100);if(st.sc>=KKM&&L<2)S.unl=Math.max(S.unl,L+1);
+ save();enqueue('LKPD',D[L].nm,st.sc,w.join(','));tabsR();showRes(L,true)}
+function showRes(L,auto){var st=S.lk[L],sc=st.sc,box=$('lkres');if(!box)return;var pass=sc>=KKM,h,snd='<div class="sendst"></div>',nm=D[L].nm.split(' · ')[0];
+ if(pass&&L<2){h='<div class="res up"><div class="big">🎉 '+nm+' tuntas!</div><p>Nilaimu <b>'+sc+'</b>. '+(auto?'Kamu otomatis naik ke <b>'+D[L+1].nm+'</b> dalam <b id="cd">5</b> detik…':'<b>'+D[L+1].nm+'</b> sudah terbuka untukmu.')+'</p>'+snd+'<div class="ctl"><button class="go" id="lkgo">Pindah ke tingkat berikutnya ▶</button></div></div>'}
+ else if(pass){h='<div class="res up"><div class="big">🏆 Semua tingkat selesai!</div><p>Nilai '+nm+': <b>'+sc+'</b>. Hebat!</p>'+snd+'<div class="ctl"><button class="go" data-go="refleksi">Lanjut ke Refleksi ▶</button></div></div>'}
+ else{h='<div class="res"><div class="big">📘 '+nm+' selesai, belum tuntas</div><p>Nilaimu <b>'+sc+'</b> (batas tuntas '+KKM+'). Jawaban sudah terkunci dan nilai terkirim ke guru, jadi tingkat berikutnya belum terbuka. Pelajari lagi menu Materi, lalu lanjut ke Refleksi dan konsultasikan dengan gurumu.</p>'+snd+'<div class="ctl"><button class="ghost" data-go="materi">Buka Materi</button><button class="go" data-go="refleksi">Lanjut ke Refleksi ▶</button></div></div>'}
+ box.innerHTML=h;sync();if(auto&&sc==100)confetti();
+ if(auto&&pass&&L<2){var c=5;clearInterval(lkT);lkT=setInterval(function(){c--;if(c<=0){clearInterval(lkT);advance();return}var e=$('cd');if(e)e.textContent=c},1000)}}
+function advance(){clearInterval(lkT);if(!S||!S.pre||S.unl<=cur)return;var to=S.unl;
+ function go(){cur=to;tabsR();lkR();window.scrollTo(0,0)}
+ if($('lkpd').classList.contains('on'))levelUp(D[to].nm,go);else go()}
+function levelUp(nm,cb){var o=document.createElement('div');o.id='lvup';o.innerHTML='<div><div class="e">🚀</div><b>Naik tingkat!</b><span>'+nm+'</span></div>';document.body.appendChild(o);confetti();setTimeout(cb,900);setTimeout(function(){o.remove()},2100)}
+/* pretest */
+var PQ=[
+ ['Nilai dari 2⁴ adalah …',['8','6','16','24'],2],
+ ['Nilai dari 3³ adalah …',['9','27','6','12'],1],
+ ['Nilai dari 5⁰ adalah …',['1','0','5','50'],0],
+ ['Satu sel bakteri membelah menjadi 2 setiap jam. Berapa jumlah sel setelah 5 jam?',['10','16','25','32'],3],
+ ['Hasil dari 2³ × 2² dalam bentuk pangkat adalah …',['2⁵','2⁶','4⁵','4⁶'],0],
+ ['Hasil dari (2³)² dalam bentuk pangkat adalah …',['2⁵','2⁹','2⁶','4⁵'],2],
+ ['Nilai dari 2⁻¹ adalah …',['−2','1/2','2','−1/2'],1],
+ ['2 dipangkatkan berapa agar hasilnya 32?',['4','6','16','5'],3],
+ ['10 dipangkatkan berapa agar hasilnya 0,01?',['2','−2','0,01','−1'],1],
+ ['Sel bakteri berlipat 2 tiap jam, mulai dari 1 sel. Setelah berapa jam jumlahnya 64 sel?',['5','8','6','32'],2]];
+var PX=['2⁴ = 2 × 2 × 2 × 2 = 16.','3³ = 3 × 3 × 3 = 27.','Bilangan apa pun (selain 0) yang dipangkatkan 0 hasilnya 1.','Tiap jam jumlahnya dikali 2, jadi 2⁵ = 32 sel.','Pangkat dijumlahkan: 2³ × 2² = 2³⁺² = 2⁵.','Pangkat dikalikan: (2³)² = 2³ˣ² = 2⁶.','a⁻ⁿ = 1/aⁿ, jadi 2⁻¹ = 1/2.','2⁵ = 32, jadi pangkatnya 5.','10⁻² = 1/100 = 0,01, jadi pangkatnya −2.','2⁶ = 64, jadi butuh 6 jam.'];
+var pqT=0;
+function pqR(){$('pqf').innerHTML=PQ.map(function(q,i){return '<div class="card" id="pc'+i+'" style="--i:'+i+'"><b>'+(i+1)+'.</b> '+q[0]+'<div>'+q[1].map(function(o,j){return '<label class="op"><input type="radio" name="pq'+i+'" value="'+j+'"> '+'ABCD'[j]+'. '+o+'</label>'}).join('')+'</div></div>'}).join('');
+ $('pqb').style.display='';$('pqb').textContent='Kumpulkan jawaban';$('pqb').dataset.s='';$('pqm').className='card';$('pqm').textContent='Pilih satu jawaban untuk tiap soal.'}
+function pqEnter(){if(S&&S.pre&&!pqEnter.g){pqEnter.g=1;pqGrade(S.pre.a,false)}}
+function countUp(to){var e=$('rgn'),r=$('rg'),t0=null;if(!e)return;function f(t){if(!t0)t0=t;var p=Math.min(1,(t-t0)/1200),v=Math.round(to*p);e.textContent=v;r.style.setProperty('--p',v);if(p<1)requestAnimationFrame(f)}requestAnimationFrame(f)}
+$('pqb').onclick=function(){var miss=[],ans=[],b=this;
+ PQ.forEach(function(q,i){$('pc'+i).classList.remove('miss');var r=document.querySelector('input[name=pq'+i+']:checked');if(r)ans[i]=+r.value;else miss.push(i)});
+ if(miss.length){miss.forEach(function(i){$('pc'+i).classList.add('miss')});b.dataset.s='';b.textContent='Kumpulkan jawaban';$('pqm').className='card no';$('pqm').textContent='Belum dijawab: soal no. '+miss.map(function(i){return i+1}).join(', ')+'.';$('pc'+miss[0]).scrollIntoView({behavior:'smooth',block:'center'});return}
+ if(b.dataset.s!='1'){b.dataset.s='1';b.textContent='Yakin? Klik sekali lagi (jawaban tidak bisa diubah)';clearTimeout(pqT);pqT=setTimeout(function(){b.dataset.s='';b.textContent='Kumpulkan jawaban'},6000);return}
+ clearTimeout(pqT);pqGrade(ans,true)};
+function pqGrade(ans,fresh){var n=0,bad=[];
+ PQ.forEach(function(q,i){var pick=ans[i],ok=pick==q[2],c=$('pc'+i);if(ok)n++;else bad.push(i);
+  var r=c.querySelector('input[value="'+pick+'"]');if(r)r.checked=true;
+  c.classList.remove('miss');c.classList.add(ok?'right':'wrong');
+  c.querySelectorAll('.op').forEach(function(l,j){l.classList.toggle('sel',j==pick);if(j==q[2])l.classList.add('good');else if(j==pick)l.classList.add('bad')});
+  c.insertAdjacentHTML('beforeend','<div class="rv2 '+(ok?'okb':'nob')+'">'+(ok?'✅ Benar.':'❌ Salah. Jawabanmu '+'ABCD'[pick]+'; jawaban yang benar <b>'+'ABCD'[q[2]]+'. '+q[1][q[2]]+'</b>.')+'<br>💡 '+PX[i]+'</div>')});
+ var sc=n*10,lv=sc<50?0:sc<75?1:2;pqEnter.g=1;
+ document.querySelectorAll('#pqf input').forEach(function(x){x.disabled=true});$('pqb').style.display='none';
+ if(fresh){S.pre={a:ans,sc:sc,lv:lv};S.unl=lv;S.lk={};save();enqueue('Pretest',D[lv].nm,sc,bad.map(function(i){return i+1}).join(','));if(sc>=75)confetti();menuR();stepR()}
+ $('pqm').className='card res';
+ $('pqm').innerHTML='<div class="ring" id="rg"><b id="rgn">0</b></div><div style="font-size:1.1rem">Benar <b>'+n+'</b> dari 10 soal.</div><div class="mut">'+(bad.length?'Soal yang salah: no. '+bad.map(function(i){return i+1}).join(', ')+'.':'Semua soal benar! 🌟')+'</div><div class="plc2">🔑 Penempatan LKPD-mu (otomatis): <b>'+D[lv].nm+'</b></div><div class="sendst"></div><div class="ctl">'+(bad.length?'<button class="ghost" id="pqw">Lihat soal yang salah</button>':'')+'<button class="go" id="pqn" data-go="tujuan">Lanjut ke Tujuan Pembelajaran ▶</button></div>';
+ countUp(sc);sync();
+ if(bad.length)$('pqw').onclick=function(){$('pc'+bad[0]).scrollIntoView({behavior:'smooth',block:'center'})};
+ if(fresh)setTimeout(function(){$('pqm').scrollIntoView({behavior:'smooth',block:'center'})},250)}
+pqR();
+$('pqf').onchange=function(e){document.querySelectorAll('input[name='+e.target.name+']').forEach(function(x){x.parentNode.classList.toggle('sel',x.checked)})};
+/* refleksi */
+var R=['Aku bisa mengubah bentuk pangkat ke logaritma','Aku bisa memakai sifat-sifat logaritma','Aku bisa memecahkan masalah dengan logaritma','Aku aktif bekerja sama dalam kelompok'],rv={};
+$('rf').innerHTML=R.map(function(r,i){return '<div class="rf"><span>'+r+'</span><span><button class="ghost" data-r="'+i+'" data-v="1">Sudah</button> <button class="ghost" data-r="'+i+'" data-v="0">Belum</button></span></div>'}).join('');
+$('rf').onclick=function(e){var b=e.target.closest('[data-r]');if(!b)return;rv[b.dataset.r]=+b.dataset.v;
+ document.querySelectorAll('[data-r="'+b.dataset.r+'"]').forEach(function(x){x.classList.remove('on')});b.classList.add('on');
+ var n=0,c=0;for(var k in rv){c++;n+=rv[k]}
+ $('rfm').innerHTML=c<R.length?'Terjawab '+c+' dari '+R.length:(n==R.length?'🌟 Luar biasa! Kamu siap lanjut ke materi berikutnya.':n>=2?'👍 Bagus. Ulangi bagian yang masih “Belum” di menu Materi atau LKPD.':'💪 Tidak apa-apa. Buka lagi menu Materi dan Masalah PBL, lalu coba LKPD tingkat 1.');if(c==R.length&&n==R.length)confetti()};
+$('rfm').textContent='Terjawab 0 dari '+R.length;
+/* kirim nilai otomatis ke Google Sheets guru (antrean: aman kalau internet putus) */
+var Q=[],busy=false;try{Q=JSON.parse(localStorage.getItem('lgm_q')||'[]')}catch(e){}
+function saveQ(){try{localStorage.setItem('lgm_q',JSON.stringify(Q))}catch(e){}}
+function enqueue(jenis,tingkat,nilai,salah){if(!S||!S.id)return;
+ Q.push({kode:SHEET_KODE,nama:S.id.n,kelas:S.id.k,jenis:jenis,tingkat:tingkat,nilai:nilai,salah:salah});saveQ();sync();flush();
+ toast('Nilai '+jenis+' dikirim otomatis ke guru.')}
+function flush(){if(busy||!Q.length)return;if(!SHEET_URL){sync();return}busy=true;
+ fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(Q[0])})
+ .then(function(){Q.shift();saveQ();busy=false;sync();flush()})
+ .catch(function(){busy=false;sync()})}
+function sync(){var t=!SHEET_URL?'⚠ URL penerima nilai belum diisi':Q.length?'⏳ Mengirim nilai ke guru… (dicoba lagi otomatis)':'✔ Nilai sudah terkirim ke guru';
+ document.querySelectorAll('.sendst').forEach(function(e){e.className='sendst '+(Q.length||!SHEET_URL?'wait':'okk');e.textContent=t})}
+setInterval(flush,6000);window.addEventListener('online',flush);
+/* mulai */
+$('nm').disabled=$('kl').disabled=false;
+pqR();menuR();stepR();progR();tabsR();lkR();sync();flush();
+/* musik latar lo-fi: dirender sekali oleh browser menjadi audio, lalu diputar berulang (aman di HP) */
+var AC,bus,drum,NB,PC=null,PG=null,SP=.395,au=new Audio(),mOn=false,mOff=false,mNext=0,mStep=0,mTimer=0,silentSrc='';
+var CH=[[53,57,60,64,67],[52,55,59,62,67],[50,53,57,60,64],[48,52,55,59,62]],BS=[41,40,38,36];
+var MEL=[[[0,76,2],[2,79,2],[4,81,3]],[[0,79,2],[2,76,2],[4,74,3]],[[0,77,2],[2,76,1],[3,74,1],[4,72,3]],[[0,76,4],[6,72,2]],
+ [[0,81,2],[2,79,2],[4,77,3]],[[0,76,2],[2,79,2],[4,83,3]],[[0,81,2],[2,77,2],[4,74,2],[6,76,1]],[[0,72,3],[4,76,4]]];
+function fq(m){return 440*Math.pow(2,(m-69)/12)}
+function ep(m,t,d,v,br){var f=fq(m),o=AC.createOscillator(),o2=AC.createOscillator(),g=AC.createGain(),g2=AC.createGain();
+ o.frequency.value=f;o2.frequency.value=f*2;o.detune.value=(Math.random()-.5)*8;
+ g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+d);
+ g2.gain.setValueAtTime(v*(br||.35),t);g2.gain.exponentialRampToValueAtTime(.0001,t+Math.min(d,.5));
+ o.connect(g);o2.connect(g2);g.connect(bus);g2.connect(bus);o.start(t);o2.start(t);o.stop(t+d+.05);o2.stop(t+d+.05)}
+function pad(m,t,d,v){[-7,7].forEach(function(c){var o=AC.createOscillator(),g=AC.createGain();o.type='triangle';o.frequency.value=fq(m);o.detune.value=c;
+ g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+1);g.gain.linearRampToValueAtTime(0,t+d);o.connect(g);g.connect(bus);o.start(t);o.stop(t+d+.05)})}
+function bass(m,t,d,v){var o=AC.createOscillator(),g=AC.createGain();o.type='triangle';o.frequency.value=fq(m);
+ g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(bus);o.start(t);o.stop(t+d+.05)}
+function kick(t,v){var o=AC.createOscillator(),g=AC.createGain();o.frequency.setValueAtTime(130,t);o.frequency.exponentialRampToValueAtTime(42,t+.14);
+ g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0001,t+.28);o.connect(g);g.connect(drum);o.start(t);o.stop(t+.3)}
+function nz(t,d,v,ty,fr){var s=AC.createBufferSource(),f=AC.createBiquadFilter(),g=AC.createGain();s.buffer=NB;f.type=ty;f.frequency.value=fr;
+ g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);s.connect(f);f.connect(g);g.connect(drum);s.start(t);s.stop(t+d+.02)}
+function stepAt(s,t0){var bar=Math.floor(s/8),p=s%8,ci=bar%4,ch=CH[ci],t=t0+(p%2?.05:0);
+ if(p==0){ch.forEach(function(m,i){ep(m,t+i*.035,3.2,.032)});ch.slice(0,4).forEach(function(m){pad(m,t,3.4,.012)});bass(BS[ci]+12,t,1.9,.12)}
+ if(p==5)ch.slice(1,4).forEach(function(m,i){ep(m,t+i*.03,1.2,.02)});
+ if(p==6)bass(BS[ci]+19,t,.9,.06);
+ MEL[bar].forEach(function(n){if(n[0]==p)ep(n[1],t,n[2]*SP+.9,.06,.5)});
+ if(p==0||p==5)kick(t,.34);
+ if(p==2||p==6)nz(t,.14,.08,'bandpass',1900);
+ nz(t,.045,.02*(.5+Math.random()*.5),'highpass',7500)}
+function mui(){$('mu').textContent=mOn?'🔊':'🔇';$('mu').setAttribute('aria-pressed',mOn?'true':'false')}
+function toast(t){var e=$('mt');e.textContent=t;e.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(function(){e.style.display='none'},5000)}
+function gv(){return $('mv').value/100*2.4}
+function graph(ctx,dest){AC=ctx;var comp=ctx.createDynamicsCompressor(),lp=ctx.createBiquadFilter(),send=ctx.createGain(),cv=ctx.createConvolver(),m=Math.floor(ctx.sampleRate*2.2),ib=ctx.createBuffer(2,m,ctx.sampleRate),c,i,d;
+ for(c=0;c<2;c++){d=ib.getChannelData(c);for(i=0;i<m;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/m,3)}
+ cv.buffer=ib;NB=ctx.createBuffer(1,ctx.sampleRate,ctx.sampleRate);d=NB.getChannelData(0);for(i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+ bus=ctx.createGain();drum=ctx.createGain();drum.gain.value=.8;lp.type='lowpass';lp.frequency.value=3000;send.gain.value=.45;
+ bus.connect(lp);lp.connect(comp);lp.connect(send);send.connect(cv);cv.connect(comp);drum.connect(comp);comp.connect(dest)}
+function init(){var A=window.AudioContext||window.webkitAudioContext;if(!A){toast('Browser ini belum mendukung musik.');return false}
+ if(!PC){PC=new A();PG=PC.createGain();PG.gain.value=0;var lim=PC.createDynamicsCompressor();lim.threshold.value=-4;lim.knee.value=0;lim.ratio.value=20;lim.attack.value=.003;lim.release.value=.15;
+  graph(PC,PG);PG.connect(lim);lim.connect(PC.destination)}
+ return true}
+function unlockIOS(){try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}
+ try{if(!silentSrc){var n=4000,bf=new ArrayBuffer(44+n*2),v=new DataView(bf),k,t='';function w(o,x){for(var q=0;q<x.length;q++)v.setUint8(o+q,x.charCodeAt(q))}
+  w(0,'RIFF');v.setUint32(4,36+n*2,true);w(8,'WAVEfmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,8000,true);v.setUint32(28,16000,true);v.setUint16(32,2,true);v.setUint16(34,16,true);w(36,'data');v.setUint32(40,n*2,true);
+  var u=new Uint8Array(bf);for(k=0;k<u.length;k++)t+=String.fromCharCode(u[k]);silentSrc='data:audio/wav;base64,'+btoa(t)}
+  au.src=silentSrc;au.loop=true;var q=au.play();if(q&&q.catch)q.catch(function(){})}catch(e){}}
+function runLoop(){if(mTimer)return;mNext=PC.currentTime+.7;mStep=0;
+ mTimer=setInterval(function(){while(mNext<PC.currentTime+1.2){stepAt(mStep%64,mNext);mNext+=SP;mStep++}},150)}
+function musicOn(){if(!init())return;unlockIOS();mOff=false;
+ var go=function(){PG.gain.cancelScheduledValues(PC.currentTime);PG.gain.setTargetAtTime(gv(),PC.currentTime,.1);
+  if(!mTimer){var t=PC.currentTime+.05;ep(72,t,1.4,.1,.5);ep(76,t+.14,1.4,.1,.5);ep(79,t+.28,1.8,.1,.5);runLoop()}
+  mOn=true;mui();toast(PC.state=='running'?'Musik menyala. Kalau belum terdengar: naikkan volume HP dan matikan mode senyap.':'Suara diblokir browser. Ketuk tombol 🔊 sekali lagi.')};
+ var r=PC.resume?PC.resume():null;if(r&&r.then)r.then(go,go);else go()}
+function musicOff(){mOn=false;mOff=true;mui();try{PG.gain.setTargetAtTime(0,PC.currentTime,.15);setTimeout(function(){if(!mOn)PC.suspend()},700);au.pause()}catch(e){}}
+$('mu').onclick=function(){mOn?musicOff():musicOn()};
+$('mv').oninput=function(){if(PG&&mOn)PG.gain.setTargetAtTime(gv(),PC.currentTime,.05)};
+document.querySelector('.start').addEventListener('click',function(){if(!mOn&&!mOff)musicOn()});
+</script>
+</body>
+</html>
